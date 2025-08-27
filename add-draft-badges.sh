@@ -45,9 +45,10 @@ process_file() {
         
         # Add or update to Placeholder badge
         if grep -q "sidebar:" "$file" && grep -q "badge:" "$file"; then
-            # Update existing badge to Placeholder
-            sed -i '' 's/text: Draft/text: Placeholder/g' "$file"
-            sed -i '' 's/variant: caution/variant: note/g' "$file"
+            # Update existing badge to Placeholder using a temp file for portability
+            temp_sed_file=$(mktemp)
+            sed 's/text: Draft/text: Placeholder/g; s/variant: caution/variant: note/g' "$file" > "$temp_sed_file"
+            mv "$temp_sed_file" "$file"
         else
             # Add new sidebar with Placeholder badge
             temp_file=$(mktemp)
