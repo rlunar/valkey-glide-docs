@@ -26,8 +26,9 @@ echo "0" > "$placeholder_count_file"
 echo "0" > "$draft_count_file"
 echo "0" > "$skipped_count_file"
 
-# Find all MDX files in the src/content/docs directory
-while IFS= read -r -d '' file; do
+# Function to process a single file
+process_file() {
+    local file="$1"
     echo "Processing: $file"
     
     # Get file size in bytes
@@ -146,7 +147,16 @@ while IFS= read -r -d '' file; do
         echo "  ⚠️  Skipped - already has sidebar structure: $file"
         echo $(($(cat "$skipped_count_file") + 1)) > "$skipped_count_file"
     fi
-done < <(find src/content/docs -name "*.mdx" -type f -print0)
+}
+
+# Use a temporary file to store the list of files
+temp_files_list="$temp_dir/files_list"
+find src/content/docs -name "*.mdx" -type f > "$temp_files_list"
+
+# Process each file
+while IFS= read -r file; do
+    process_file "$file"
+done < "$temp_files_list"
 
 # Read final counts
 placeholder_count=$(cat "$placeholder_count_file")
