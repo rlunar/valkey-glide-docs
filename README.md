@@ -1,6 +1,6 @@
 # Valkey Glide Documentation
 
-The home of great documentation for Valkey GLIDE.  
+The home of documentation for Valkey GLIDE.  
 
 ## Technology
 
