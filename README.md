@@ -1,4 +1,4 @@
-# Valkey Glide Documentations
+# Valkey Glide Documentation
 
 The home of great documentation for Valkey GLIDE.  
 
