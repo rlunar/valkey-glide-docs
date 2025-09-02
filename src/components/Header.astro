@@ -43,6 +43,9 @@ const shouldRenderSearch =
         <LanguageSelect />
     </div>
 </div>
+
+<!-- Valkey Gradient Header Section -->
+<div class="valkey-gradient-header"></div>
 <style>
     @layer starlight.core {
         .header {
@@ -50,8 +53,22 @@ const shouldRenderSearch =
             gap: var(--sl-nav-gap);
             justify-content: space-between;
             align-items: center;
-            height: 100%;
+            height: var(--sl-nav-bar-height) !important;
         }
+
+        /* Site title styling */
+        :global(a.site-title) {
+            gap: 0.5rem;
+        }
+
+        :global(a.site-title span) {
+            color: var(--valkey-site-title-color);
+        }
+
+        :global(.site-title img) {
+            height: calc(var(--sl-nav-bar-height) - 2 * var(--sl-nav-pad-y));
+        }
+
         .title-wrapper {
             /* Prevent long titles overflowing and covering the search and menu buttons on narrow viewports. */
             overflow: clip;
@@ -60,24 +77,37 @@ const shouldRenderSearch =
             margin: -0.25rem;
             min-width: 0;
         }
+
         .right-group,
         .social-icons {
             gap: 1rem;
             align-items: center;
         }
+
         .social-icons::after {
-            content: "
-      ";
+            content: "";
             height: 2rem;
             border-inline-end: 1px solid var(--sl-color-gray-5);
         }
+
+        /* Valkey Gradient Header Styles */
+        .valkey-gradient-header {
+            background-image: linear-gradient(#3b2a66, #4e51bf);
+            height: var(--valkey-gradient-height);
+            margin: 0;
+            width: 100vw;
+            margin-left: calc(-1 * var(--sl-nav-pad-x));
+        }
+
         @media (min-width: 50rem) {
             :global(:root[data-has-sidebar]) {
                 --__sidebar-pad: calc(2 * var(--sl-nav-pad-x));
             }
+
             :global(:root:not([data-has-toc])) {
                 --__toc-width: 0rem;
             }
+
             .header {
                 --__sidebar-width: max(
                     0rem,

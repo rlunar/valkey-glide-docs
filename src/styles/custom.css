@@ -1,13 +1,43 @@
-a.site-title {
-  gap: 0.5rem;
-}
+/* Define cascade layers - our overrides come after starlight */
+@layer starlight, valkey-overrides;
 
-/* Site logo is an SVG rendered as an image, so we need to use CSS filters to change its color. */
-a.site-title img {
-  filter: brightness(0) saturate(100%) invert(45%) sepia(100%) saturate(1742%)
-    hue-rotate(220deg) brightness(105%) contrast(101%);
-}
+@layer valkey-overrides {
+  /* Valkey gradient header height adjustments */
+  :root {
+    --valkey-site-title-color: hsl(0, 0%, 100%); /* White for dark mode */
+    --valkey-gradient-height: 3rem; /* Small gradient bar for branding */
+    --sl-nav-height: calc(
+      3.5rem + var(--valkey-gradient-height) + var(--sl-nav-pad-y)
+    ); /* Mobile: original nav height + gradient header + padding */
+    --sl-nav-bar-height: 3.5rem; /* Original navbar height for header container */
+  }
 
-a.site-title span {
-  color: #6983ff;
+  :root[data-theme="light"],
+  [data-theme="light"] ::backdrop {
+    --valkey-site-title-color: hsl(
+      224,
+      10%,
+      10%
+    ); /* Dark color for light mode */
+  }
+
+  @media (min-width: 50em) {
+    :root {
+      --valkey-gradient-height: 4rem; /* Slightly larger gradient bar for desktop */
+      --sl-nav-height: calc(
+        4rem + var(--valkey-gradient-height) + var(--sl-nav-pad-y)
+      ); /* Desktop: original nav height + gradient header + padding */
+      --sl-nav-bar-height: 4rem; /* Original navbar height for header container */
+    }
+
+    /* Fix hamburger menu button alignment on desktop */
+    .sl-flex:has(starlight-menu-button) {
+      align-items: center !important;
+      height: var(--sl-nav-bar-height) !important;
+    }
+
+    starlight-menu-button {
+      align-self: center !important;
+    }
+  }
 }
