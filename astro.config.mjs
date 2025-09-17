@@ -17,7 +17,7 @@ export default defineConfig({
         Header: "./src/components/Header.astro",
         MobileMenuToggle: "./src/components/MobileMenuToggle.astro",
       },
-      title: "Valkey Glide",
+      title: "Valkey GLIDE",
       logo: {
         src: "./src/assets/valkey-logo.svg",
       },
@@ -308,6 +308,16 @@ export default defineConfig({
                   autogenerate: { directory: "languages/go/reference" },
                 },
               ],
+            },
+            {
+              label: "C#",
+              collapsed: true,
+              autogenerate: {directory: "languages/csharp"}
+            },
+            {
+              label: "Php",
+              collapsed: true,
+              autogenerate: {directory: "languages/php"}
             }
           ],
         },
@@ -315,7 +325,12 @@ export default defineConfig({
           label: "Migration",
           collapsed: true,
           items: [
-           "migration"
+           "migration",
+           {
+            label: "Planning",
+            collapsed: true,
+            autogenerate: {directory: "migration/planning"}
+           }
           ]
         },
         {
