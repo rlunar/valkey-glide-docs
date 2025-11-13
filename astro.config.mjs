@@ -34,16 +34,13 @@ export default defineConfig({
       autoTheme: true,
     }),
     starlight({
-      components: {
-        Header: "./src/components/Header.astro",
-        MobileMenuToggle: "./src/components/MobileMenuToggle.astro",
-      },
-      title: "Valkey GLIDE",
+      title: "Valkey Glide",
       logo: {
-        src: "./src/assets/valkey-logo.svg",
+        light: "./src/assets/valkey-glide-logo-with-name-light.svg",
+        dark: "./src/assets/valkey-glide-logo-with-name-dark.svg",
+        replacesTitle: true,
       },
       customCss: [
-        // Relative path to your custom CSS file
         "./src/styles/custom.css",
       ],
       favicon: "/favicon-32x32.png",
@@ -126,7 +123,7 @@ export default defineConfig({
                   autogenerate: { directory: "languages/python/developer" },
                 },
                 {
-                  label:"API", link:'languages/python/api', attrs: { style: 'font-style: italic', target: '_blank'}
+                  label:"API Reference", link:'languages/python/api', attrs: { style: 'font-style: italic', target: '_blank'}
                 },
               ],
             },
