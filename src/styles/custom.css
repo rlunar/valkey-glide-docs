@@ -57,7 +57,7 @@
   }
 }
 
-/* Move the logo and title on the header bar closer to the center of the page. */
-.title-wrapper {
-	justify-content: right;
+.hero {
+	padding-bottom: 1.25rem;
+	padding-top: 1.25rem;
 }

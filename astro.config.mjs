@@ -4,8 +4,7 @@ import starlight from "@astrojs/starlight";
 import mermaid from "astro-mermaid";
 
 function collapsed(isCollapsed = false, sidebarItems) {
-  return sidebarItems.map(item => {
-
+  return sidebarItems.map((item) => {
     if (item.items) {
       return {
         ...item,
@@ -40,9 +39,7 @@ export default defineConfig({
         dark: "./src/assets/valkey-glide-logo-with-name-dark.svg",
         replacesTitle: true,
       },
-      customCss: [
-        "./src/styles/custom.css",
-      ],
+      customCss: ["./src/styles/custom.css"],
       favicon: "/favicon-32x32.png",
       editLink: {
         baseUrl: "https://github.com/valkey-io/valkey-glide-docs/edit/main/",
@@ -59,28 +56,33 @@ export default defineConfig({
         "whats-new",
         {
           label: "Learn",
-          items: [    
-             "getting-started/quickstart",
-             "getting-started/basic-operations",
-             {
+          items: [
+            "getting-started/quickstart",
+            "getting-started/basic-operations",
+            {
               label: "Tutorials",
               collapsed: true,
               autogenerate: {
                 directory: "getting-started/tutorials",
               },
-             },
-              {
-                label: "Concepts",
-                collapsed: true,
-                autogenerate: { directory: "concepts" },  
-              },
-          ]
+            },
+            {
+              label: "Architecture",
+              collapsed: true,
+              autogenerate: { directory: "concepts/architecture" },
+            },
+            {
+              label: "Client Features",
+              collapsed: true,
+              autogenerate: { directory: "concepts/client-features" },
+            },
+          ],
         },
-        {
-          label: "How-To Guides",
-          collapsed: true,
-          autogenerate: { directory: "how-to" },
-        },
+        // {
+        //   label: "How-To Guides",
+        //   collapsed: true,
+        //   autogenerate: { directory: "how-to" },
+        // },
         {
           label: "Languages",
           items: collapsed(true, [
@@ -94,10 +96,10 @@ export default defineConfig({
                     directory: "languages/python/getting-started",
                   },
                 },
-                {
-                  label: "Concepts",
-                  autogenerate: { directory: "languages/python/concepts" },
-                },
+                // {
+                //   label: "Concepts",
+                //   autogenerate: { directory: "languages/python/concepts" },
+                // },
                 {
                   label: "How-to",
                   autogenerate: { directory: "languages/python/how-to" },
@@ -111,19 +113,22 @@ export default defineConfig({
                 {
                   label: "Migration",
                   items: [
-                    "languages/python/migration",
                     {
                       label: "From redis-py",
-                      autogenerate: {directory: "languages/python/migration/redis-py"}
+                      autogenerate: {
+                        directory: "languages/python/migration/redis-py",
+                      },
                     },
-                  ]
+                  ],
                 },
                 {
                   label: "Contributing",
                   autogenerate: { directory: "languages/python/developer" },
                 },
                 {
-                  label:"API Reference", link:'languages/python/api', attrs: { style: 'font-style: italic', target: '_blank'}
+                  label: "API Reference",
+                  link: "languages/python/api",
+                  attrs: { style: "font-style: italic", target: "_blank" },
                 },
               ],
             },
@@ -137,10 +142,10 @@ export default defineConfig({
                     directory: "languages/java/getting-started",
                   },
                 },
-                {
-                  label: "Concepts",
-                  autogenerate: { directory: "languages/java/concepts" },
-                },
+                // {
+                //   label: "Concepts",
+                //   autogenerate: { directory: "languages/java/concepts" },
+                // },
                 {
                   label: "How-to",
                   autogenerate: { directory: "languages/java/how-to" },
@@ -155,24 +160,32 @@ export default defineConfig({
                     "languages/java/migration",
                     {
                       label: "From Jedis",
-                      autogenerate: {directory: "languages/java/migration/jedis"}
+                      autogenerate: {
+                        directory: "languages/java/migration/jedis",
+                      },
                     },
                     {
                       label: "From Lettuce",
-                      autogenerate: {directory: "languages/java/migration/lettuce"}
+                      autogenerate: {
+                        directory: "languages/java/migration/lettuce",
+                      },
                     },
                     {
                       label: "From Redisson",
-                      autogenerate: {directory: "languages/java/migration/redisson"}
-                    }
-                  ]
+                      autogenerate: {
+                        directory: "languages/java/migration/redisson",
+                      },
+                    },
+                  ],
                 },
                 {
                   label: "Contributing",
                   autogenerate: { directory: "languages/java/developer" },
                 },
                 {
-                  label:"API Reference", link:'languages/java/api', attrs: { style: 'font-style: italic', target: '_blank'}
+                  label: "API Reference",
+                  link: "languages/java/api",
+                  attrs: { style: "font-style: italic", target: "_blank" },
                 },
               ],
             },
@@ -186,34 +199,39 @@ export default defineConfig({
                     directory: "languages/nodejs/getting-started",
                   },
                 },
-                {
-                  label: "Concepts",
-                  autogenerate: { directory: "languages/nodejs/concepts" },
-                },
+                // {
+                //   label: "Concepts",
+                //   autogenerate: { directory: "languages/nodejs/concepts" },
+                // },
                 {
                   label: "How-to",
                   autogenerate: { directory: "languages/nodejs/how-to" },
                 },
                 {
                   label: "Valkey Commands",
-                  autogenerate: { directory: "languages/nodejs/valkey-commands" },
+                  autogenerate: {
+                    directory: "languages/nodejs/valkey-commands",
+                  },
                 },
                 {
                   label: "Migration",
                   items: [
-                    "languages/nodejs/migration",
                     {
                       label: "From ioredis",
-                      autogenerate: {directory: "languages/nodejs/migration/ioredis"}
+                      autogenerate: {
+                        directory: "languages/nodejs/migration/ioredis",
+                      },
                     },
-                  ]
+                  ],
                 },
                 {
                   label: "Contributing",
                   autogenerate: { directory: "languages/nodejs/developer" },
                 },
                 {
-                  label:"API Reference", link:'languages/nodejs/api', attrs: { style: 'font-style: italic', target: '_blank'}
+                  label: "API Reference",
+                  link: "languages/nodejs/api",
+                  attrs: { style: "font-style: italic", target: "_blank" },
                 },
               ],
             },
@@ -227,10 +245,10 @@ export default defineConfig({
                     directory: "languages/go/getting-started",
                   },
                 },
-                {
-                  label: "Concepts",
-                  autogenerate: { directory: "languages/go/concepts" },
-                },
+                // {
+                //   label: "Concepts",
+                //   autogenerate: { directory: "languages/go/concepts" },
+                // },
                 {
                   label: "How-to",
                   autogenerate: { directory: "languages/go/how-to" },
@@ -242,43 +260,37 @@ export default defineConfig({
                 {
                   label: "Migration",
                   items: [
-                    "languages/go/migration",
                     {
                       label: "From go-redis",
-                      
-                      autogenerate: {directory: "languages/go/migration/go-redis"}
+                      autogenerate: {
+                        directory: "languages/go/migration/go-redis",
+                      },
                     },
-                  ]
+                  ],
                 },
                 {
                   label: "Contributing",
                   autogenerate: { directory: "languages/go/developer" },
                 },
                 {
-                  label:"API Reference", link:'https://www.google.ca', attrs: { style: 'font-style: italic', target: '_blank'}
+                  label: "Configuration API Reference",
+                  link: "https://pkg.go.dev/github.com/valkey-io/valkey-glide/go/v2/config",
+                  attrs: { style: "font-style: italic", target: "_blank" },
                 },
               ],
             },
-            {
-              label: "C#",
-              autogenerate: {directory: "languages/csharp"}
-            },
-            {
-              label: "Php",
-              autogenerate: {directory: "languages/php"}
-            }
           ]),
         },
         {
           label: "Migration",
           collapsed: true,
           items: [
-           "migration",
-           {
-            label: "Planning",
-            autogenerate: {directory: "migration/planning"}
-           }
-          ]
+            "migration",
+            //  {
+            //   label: "Planning",
+            //   autogenerate: {directory: "migration/planning"}
+            //  }
+          ],
         },
         {
           label: "Reference",
