@@ -25,8 +25,7 @@ function collapsed(isCollapsed = false, sidebarItems) {
 }
 
 export default defineConfig({
-  site: "https://valkey-io.github.io",
-  base: "/valkey-glide-docs",
+  site: "https://glide.valkey.io",
   integrations: [
     mermaid({
       theme: "default",
