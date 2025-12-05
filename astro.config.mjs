@@ -38,6 +38,9 @@ export default defineConfig({
         dark: "./src/assets/valkey-glide-logo-with-name-dark.svg",
         replacesTitle: true,
       },
+      components:{
+        PageFrame: "./src/components/PageFrameWithFooter.astro"
+      },
       customCss: ["./src/styles/custom.css"],
       favicon: "/favicon-32x32.png",
       editLink: {

@@ -61,3 +61,17 @@
 	padding-bottom: 1.25rem;
 	padding-top: 1.25rem;
 }
+
+/* Quick fix make sure the left nav bar don't overlap the footer. 
+It is not perfect as the divider now stops halfway.
+
+Try expanding one of the menu the item.
+
+The correct way would be to force it to span the entire page*/
+.sidebar-pane {
+  inset-block: var(--sl-nav-height) 11rem;
+}
+
+.right-sidebar{
+  height: calc(100vh - var(--sl-nav-height) - 11rem);
+}
