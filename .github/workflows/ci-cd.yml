@@ -22,7 +22,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          LATEST_TAG=$(gh release view --repo valkey-io/valkey-glide --json tagName --q .tagName)
+          LATEST_TAG=$(gh release view --repo valkey-io/valkey-glide --json tagName --jq .tagName)
           echo "Latest release tag found: $LATEST_TAG"
           echo "tag=$LATEST_TAG" >> "$GITHUB_OUTPUT"
 
@@ -62,7 +62,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          LATEST_TAG=$(gh release view --repo valkey-io/valkey-glide --json tagName --q .tagName)
+          LATEST_TAG=$(gh release view --repo valkey-io/valkey-glide --json tagName --jq .tagName)
           echo "Latest release tag found: $LATEST_TAG"
           echo "tag=$LATEST_TAG" >> "$GITHUB_OUTPUT"
 
@@ -103,7 +103,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          LATEST_TAG=$(gh release view --repo valkey-io/valkey-glide --json tagName --q .tagName)
+          LATEST_TAG=$(gh release view --repo valkey-io/valkey-glide --json tagName --jq .tagName)
           echo "Latest release tag found: $LATEST_TAG"
           echo "tag=$LATEST_TAG" >> "$GITHUB_OUTPUT"
 
