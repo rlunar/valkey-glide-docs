@@ -4,6 +4,7 @@ on:
   pull_request:
     branches: [main]
   workflow_dispatch:
+
 permissions:
   contents: read
 
@@ -16,12 +17,21 @@ jobs:
       - name: Checkout Valkey Glide Docs
         uses: actions/checkout@v4
       
+      - name: Get latest release tag
+        id: get-tag
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          LATEST_TAG=$(gh release view --repo valkey-io/valkey-glide --json tagName --q .tagName)
+          echo "Latest release tag found: $LATEST_TAG"
+          echo "tag=$LATEST_TAG" >> "$GITHUB_OUTPUT"
+
       - name: Checkout Valkey Glide Source
         uses: actions/checkout@v4
         with:
           repository: valkey-io/valkey-glide
           path: doc-gen/valkey-glide
-          ref: main
+          ref: ${{ steps.get-tag.outputs.tag }}
 
       - name: Install Dependencies
         run: ./doc-gen/install-deps.sh
@@ -47,12 +57,21 @@ jobs:
       - name: Checkout Main Repository
         uses: actions/checkout@v4
 
+      - name: Get latest release tag
+        id: get-tag
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          LATEST_TAG=$(gh release view --repo valkey-io/valkey-glide --json tagName --q .tagName)
+          echo "Latest release tag found: $LATEST_TAG"
+          echo "tag=$LATEST_TAG" >> "$GITHUB_OUTPUT"
+
       - name: Checkout Valkey Glide Source
         uses: actions/checkout@v4
         with:
           repository: valkey-io/valkey-glide
           path: doc-gen/valkey-glide
-          ref: main
+          ref: ${{ steps.get-tag.outputs.tag }}
 
       - name: Install Dependencies
         run: ./doc-gen/install-deps.sh
@@ -79,12 +98,21 @@ jobs:
       - name: Checkout Main Repository
         uses: actions/checkout@v4
 
+      - name: Get latest release tag
+        id: get-tag
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          LATEST_TAG=$(gh release view --repo valkey-io/valkey-glide --json tagName --q .tagName)
+          echo "Latest release tag found: $LATEST_TAG"
+          echo "tag=$LATEST_TAG" >> "$GITHUB_OUTPUT"
+
       - name: Checkout Valkey Glide Source
         uses: actions/checkout@v4
         with:
           repository: valkey-io/valkey-glide
           path: doc-gen/valkey-glide
-          ref: main
+          ref: ${{ steps.get-tag.outputs.tag }}
 
       - name: Install Dependencies
         run: ./doc-gen/install-deps.sh
