@@ -24,6 +24,21 @@ function collapsed(isCollapsed = false, sidebarItems) {
   });
 }
 
+const isDev = process.argv.includes('dev');
+const googleTagManagerHeader = isDev ? [] : [
+  {
+    tag: /** @type {const} */ ('script'),
+    content: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+      })(window,document,'script','dataLayer','GTM-5SQ3G3KB');`,
+  },
+];
+const googleTagManagerBody = isDev ? {} : {
+  SkipLink: './src/components/SkipLinkWithGTM.astro',
+}
+
 export default defineConfig({
   site: "https://glide.valkey.io",
   integrations: [
@@ -33,6 +48,8 @@ export default defineConfig({
     }),
     starlight({
       title: "Valkey Glide",
+      head: [...googleTagManagerHeader],
+      components: {...googleTagManagerBody},
       logo: {
         light: "./src/assets/valkey-glide-logo-with-name-light.svg",
         dark: "./src/assets/valkey-glide-logo-with-name-dark.svg",
