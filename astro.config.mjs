@@ -72,7 +72,10 @@ export default defineConfig({
           label: "Overview", 
           slug: "overview"
         },
-        "whats-new",
+        {
+          label: "What's New",
+          slug: "releases"
+        },
         {
           label: "Learn",
           items: [
