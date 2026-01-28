@@ -123,9 +123,46 @@ export default defineConfig({
           collapsed: true,
           items: [
             "how-to/installation",
-            "how-to/monitoring/logging",
+            "how-to/client-initialization",
+            "how-to/connection-management",
+            "how-to/operations/batch-transaction-and-pipelining",
             "how-to/synchronous-connection",
-            {"label": "Connection Management", slug: "how-to/connection-management"},
+            {
+              label: "Security",
+              items: [
+                "how-to/security/authentication",
+                "how-to/security/dynamic-authentication",
+                "how-to/security/tls",
+                "how-to/security/access-control",
+              {
+                  label: "AWS Integrations",
+                  items: [
+                    {
+                      label: "IAM Authentication with GLIDE",
+                      slug: "how-to/security/iam-integration"
+                    },
+                    {
+                      label: "IAM Authentication using AWS SDK",
+                      slug: "how-to/security/iam-integration-using-aws-sdk"
+                    },
+                  ]
+                },
+              ]
+            },
+            {
+              label: "Connections",
+              items: [
+                "how-to/connections/read-strategy",
+                "how-to/connections/timeouts-and-reconnect-strategy"
+              ]
+            },
+            {
+              label: "Monitoring",
+              items: [
+                "how-to/monitoring/logging",
+                "how-to/monitoring/open-telemetry"
+              ]
+            }
           ]
         },
         {
