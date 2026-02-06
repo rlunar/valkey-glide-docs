@@ -162,6 +162,9 @@ jobs:
         with:
           package-manager: pnpm@10
 
+      - name: ls
+        run: ls /home/runner/work/valkey-glide-docs/valkey-glide-docs/dist
+
       - name: Check Links
         uses: lycheeverse/lychee-action@v2.7.0
         with:
