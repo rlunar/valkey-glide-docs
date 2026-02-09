@@ -175,7 +175,7 @@ jobs:
       - name: Check Links
         uses: lycheeverse/lychee-action@v2
         with:
-          args: --config ${{ github.workspace }}/lychee.toml --root-dir ${{ github.workspace }}/dist --verbose ${{ github.workspace }}/dist/**/*.html 
+          args: --config ${{ github.workspace }}/lychee.toml --root-dir ${{ github.workspace }}/dist --verbose '${{ github.workspace }}/dist/**/*.html'
           debug: true
           # Fail the pipeline if broken links are found
           fail: true
