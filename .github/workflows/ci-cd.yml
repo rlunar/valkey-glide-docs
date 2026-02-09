@@ -172,15 +172,8 @@ jobs:
           echo "Contents of lychee.toml:"
           cat ${{ github.workspace }}/lychee.toml
 
-      - name: Check Links
-        uses: lycheeverse/lychee-action@v2
-        with:
-          args: --verbose --config ${{ github.workspace }}/lychee.toml --base file://${{ github.workspace }}/dist ./getting-started/quickstart/index.html
-          debug: true
-          # Fail the pipeline if broken links are found
-          fail: true
-          workingDirectory: ${{ github.workspace }}/dist
-          output: ${{ github.workspace }}/lychee/results.md
+      - name: Install lychee
+        run: sudo snap install lychee
 
-      - name: display results
-        run: cat ${{ github.workspace }}/lychee/results.md
+      - name: Check Links
+        run: pnpm run check-links
