@@ -180,7 +180,7 @@ jobs:
           # Fail the pipeline if broken links are found
           fail: true
           workingDirectory: ${{ github.workspace }}/dist
-          output: lychee/results.md
+          output: ${{ github.workspace }}/lychee/results.md
 
       - name: display results
-        run: cat ./lychee/results.md
+        run: cat ${{ github.workspace }}/lychee/results.md
