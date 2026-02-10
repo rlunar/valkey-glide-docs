@@ -166,7 +166,7 @@ jobs:
       # It was not picking up the links in our repo. Thus we are now
       # installing and running lychee manually.
       - name: Install lychee
-        run: sudo snap install lychee
+        run: snap install lychee
 
       - name: Check Links
         run: pnpm run check-links
