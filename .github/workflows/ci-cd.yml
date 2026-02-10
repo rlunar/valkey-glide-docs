@@ -165,17 +165,8 @@ jobs:
       # We previously could not make lycheeverse/lychee-action@v2 work;
       # It was not picking up the links in our repo. Thus we are now
       # installing and running lychee manually.
-      # - name: Install lychee
-      #   run: sudo snap install lychee
+      - name: Install lychee
+        run: sudo snap install lychee
 
-      # - name: Check Links
-      #   run: pnpm run check-links
-
-      - name: Link Checker
-        uses: lycheeverse/lychee-action@v2
-        with:
-          # Lychee will automatically find all files in the directory
-          args: --verbose --no-progress --base_url ./dist ./dist
-          fail: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Check Links
+        run: pnpm run check-links
