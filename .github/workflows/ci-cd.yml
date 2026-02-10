@@ -161,17 +161,10 @@ jobs:
         uses: withastro/action@v4
         with:
           package-manager: pnpm@10
-
-      - name: ls
-        run: ls /home/runner/work/valkey-glide-docs/valkey-glide-docs/dist
-
-      - name: Debug - Check config file
-        run: |
-          echo "Checking if lychee.toml exists:"
-          ls -la ${{ github.workspace }}/lychee.toml
-          echo "Contents of lychee.toml:"
-          cat ${{ github.workspace }}/lychee.toml
-
+          
+      # We previously could not make lycheeverse/lychee-action@v2 work;
+      # It was not picking up the links in our repo. Thus we are now
+      # installing and running lychee manually.
       - name: Install lychee
         run: sudo snap install lychee
 
