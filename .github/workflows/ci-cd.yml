@@ -166,7 +166,7 @@ jobs:
       - name: Check Links (Getting Started)
         uses: lycheeverse/lychee-action@v2
         with:
-          args: 'dist/getting-started/quickstart/index.html'
+          args: 'dist/getting-started/quickstart/index.html' --verbose
           fail: true
 
       # We previously could not make lycheeverse/lychee-action@v2 work;
