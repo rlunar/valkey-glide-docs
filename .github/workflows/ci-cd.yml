@@ -177,17 +177,12 @@ jobs:
 
       - name: Install Lychee v0.22.0
         run: |
-          # 1. Download the specific release tarball for Linux (x86_64)
-          curl -L -o lychee.tar.gz https://github.com/lycheeverse/lychee/releases/download/v0.22.0/lychee-v0.22.0-x86_64-unknown-linux-gnu.tar.gz
-          
-          # 2. Extract the archive
-          tar -xzf lychee.tar.gz
+          wget https://github.com/lycheeverse/lychee/releases/download/lychee-v0.22.0/lychee-x86_64-unknown-linux-gnu.tar.gz
+
+          tar -xzf lychee-x86_64-unknown-linux-gnu.tar.gz
           
           # 3. Move the binary to a location in your $PATH
           sudo mv lychee /usr/local/bin/
-          
-          # 4. Cleanup
-          rm lychee.tar.gz
 
       - name: Check Links
         run: pnpm run check-links
