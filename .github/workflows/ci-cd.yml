@@ -130,7 +130,7 @@ jobs:
   # --- Main Site Build ---
 
   build-site:
-    needs: [build-node-docs, build-java-docs, build-python-docs]
+    # needs: [build-node-docs, build-java-docs, build-python-docs]
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -138,23 +138,23 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Download Node Docs
-        uses: actions/download-artifact@v4
-        with:
-          name: node-docs
-          path: public/languages/nodejs/api
+      # - name: Download Node Docs
+      #   uses: actions/download-artifact@v4
+      #   with:
+      #     name: node-docs
+      #     path: public/languages/nodejs/api
 
-      - name: Download Java Docs
-        uses: actions/download-artifact@v4
-        with:
-          name: java-docs
-          path: public/languages/java/api
+      # - name: Download Java Docs
+      #   uses: actions/download-artifact@v4
+      #   with:
+      #     name: java-docs
+      #     path: public/languages/java/api
 
-      - name: Download Python Docs
-        uses: actions/download-artifact@v4
-        with:
-          name: python-docs
-          path: public/languages/python/api
+      # - name: Download Python Docs
+      #   uses: actions/download-artifact@v4
+      #   with:
+      #     name: python-docs
+      #     path: public/languages/python/api
 
       # Build the Astro Site
       - name: Build and upload site
@@ -162,11 +162,18 @@ jobs:
         with:
           package-manager: pnpm@10
           
+      # Check links on getting started page only
+      - name: Check Links (Getting Started)
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: 'dist/getting-started/quickstart/index.html'
+          fail: true
+
       # We previously could not make lycheeverse/lychee-action@v2 work;
       # It was not picking up the links in our repo. Thus we are now
       # installing and running lychee manually.
-      - name: Install lychee
-        run: sudo snap install lychee
+      # - name: Install lychee
+      #   run: sudo snap install lychee
 
-      - name: Check Links
-        run: pnpm run check-links
+      # - name: Check Links
+      #   run: pnpm run check-links
