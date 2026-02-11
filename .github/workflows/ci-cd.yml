@@ -30,102 +30,102 @@ jobs:
         echo "tag=$LATEST_TAG" >> $GITHUB_OUTPUT
 
   # --- Parallel Documentation Build Jobs ---
-  build-node-docs:
-    needs: get-release-tag
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Valkey Glide Docs
-        uses: actions/checkout@v4
+  # build-node-docs:
+  #   needs: get-release-tag
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout Valkey Glide Docs
+  #       uses: actions/checkout@v4
 
-      - name: Checkout Valkey Glide Source
-        uses: actions/checkout@v4
-        with:
-          repository: valkey-io/valkey-glide
-          path: doc-gen/valkey-glide
-          ref: ${{ needs.get-release-tag.outputs.tag }}
+  #     - name: Checkout Valkey Glide Source
+  #       uses: actions/checkout@v4
+  #       with:
+  #         repository: valkey-io/valkey-glide
+  #         path: doc-gen/valkey-glide
+  #         ref: ${{ needs.get-release-tag.outputs.tag }}
 
-      - name: Install Dependencies
-        run: ./doc-gen/install-deps.sh
+  #     - name: Install Dependencies
+  #       run: ./doc-gen/install-deps.sh
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
+  #     - name: Setup Node.js
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: 20
 
-      - name: Generate Node Docs
-        run: ./doc-gen/build-node-docs.sh
+  #     - name: Generate Node Docs
+  #       run: ./doc-gen/build-node-docs.sh
 
-      - name: Upload Node Docs
-        uses: actions/upload-artifact@v4
-        with:
-          name: node-docs
-          path: doc-gen/docs/node
-          retention-days: 1
+  #     - name: Upload Node Docs
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: node-docs
+  #         path: doc-gen/docs/node
+  #         retention-days: 1
 
-  build-java-docs:
-    needs: get-release-tag
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Main Repository
-        uses: actions/checkout@v4
+  # build-java-docs:
+  #   needs: get-release-tag
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout Main Repository
+  #       uses: actions/checkout@v4
 
-      - name: Checkout Valkey Glide Source
-        uses: actions/checkout@v4
-        with:
-          repository: valkey-io/valkey-glide
-          path: doc-gen/valkey-glide
-          ref: ${{ needs.get-release-tag.outputs.tag }}
+  #     - name: Checkout Valkey Glide Source
+  #       uses: actions/checkout@v4
+  #       with:
+  #         repository: valkey-io/valkey-glide
+  #         path: doc-gen/valkey-glide
+  #         ref: ${{ needs.get-release-tag.outputs.tag }}
 
-      - name: Install Dependencies
-        run: ./doc-gen/install-deps.sh
+  #     - name: Install Dependencies
+  #       run: ./doc-gen/install-deps.sh
 
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '17'
+  #     - name: Setup Java
+  #       uses: actions/setup-java@v4
+  #       with:
+  #         distribution: 'temurin'
+  #         java-version: '17'
 
-      - name: Generate Java Docs
-        run: ./doc-gen/build-java-docs.sh
+  #     - name: Generate Java Docs
+  #       run: ./doc-gen/build-java-docs.sh
 
-      - name: Upload Java Docs
-        uses: actions/upload-artifact@v4
-        with:
-          name: java-docs
-          path: doc-gen/docs/java
-          retention-days: 1
+  #     - name: Upload Java Docs
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: java-docs
+  #         path: doc-gen/docs/java
+  #         retention-days: 1
 
-  build-python-docs:
-    needs: get-release-tag
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Main Repository
-        uses: actions/checkout@v4
+  # build-python-docs:
+  #   needs: get-release-tag
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout Main Repository
+  #       uses: actions/checkout@v4
 
-      - name: Checkout Valkey Glide Source
-        uses: actions/checkout@v4
-        with:
-          repository: valkey-io/valkey-glide
-          path: doc-gen/valkey-glide
-          ref: ${{ needs.get-release-tag.outputs.tag }}
+  #     - name: Checkout Valkey Glide Source
+  #       uses: actions/checkout@v4
+  #       with:
+  #         repository: valkey-io/valkey-glide
+  #         path: doc-gen/valkey-glide
+  #         ref: ${{ needs.get-release-tag.outputs.tag }}
 
-      - name: Install Dependencies
-        run: ./doc-gen/install-deps.sh
+  #     - name: Install Dependencies
+  #       run: ./doc-gen/install-deps.sh
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.13'
+  #     - name: Setup Python
+  #       uses: actions/setup-python@v5
+  #       with:
+  #         python-version: '3.13'
 
-      - name: Generate Python Docs
-        run: ./doc-gen/build-python-docs.sh
+  #     - name: Generate Python Docs
+  #       run: ./doc-gen/build-python-docs.sh
 
-      - name: Upload Python Docs
-        uses: actions/upload-artifact@v4
-        with:
-          name: python-docs
-          path: doc-gen/docs/python
-          retention-days: 1
+  #     - name: Upload Python Docs
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: python-docs
+  #         path: doc-gen/docs/python
+  #         retention-days: 1
 
   # --- Main Site Build ---
 
@@ -163,11 +163,11 @@ jobs:
           package-manager: pnpm@10
           
       # Check links on getting started page only
-      - name: Check Links (Getting Started)
-        uses: lycheeverse/lychee-action@v2
-        with:
-          args: 'dist/getting-started/quickstart/index.html --verbose'
-          fail: true
+      # - name: Check Links (Getting Started)
+      #   uses: lycheeverse/lychee-action@v2
+      #   with:
+      #     args: 'dist/getting-started/quickstart/index.html --verbose'
+      #     fail: true
 
       # We previously could not make lycheeverse/lychee-action@v2 work;
       # It was not picking up the links in our repo. Thus we are now
@@ -175,5 +175,19 @@ jobs:
       # - name: Install lychee
       #   run: sudo snap install lychee
 
-      # - name: Check Links
-      #   run: pnpm run check-links
+      - name: Install Lychee v0.22.0
+        run: |
+          # 1. Download the specific release tarball for Linux (x86_64)
+          curl -L -o lychee.tar.gz https://github.com/lycheeverse/lychee/releases/download/v0.22.0/lychee-v0.22.0-x86_64-unknown-linux-gnu.tar.gz
+          
+          # 2. Extract the archive
+          tar -xzf lychee.tar.gz
+          
+          # 3. Move the binary to a location in your $PATH
+          sudo mv lychee /usr/local/bin/
+          
+          # 4. Cleanup
+          rm lychee.tar.gz
+
+      - name: Check Links
+        run: pnpm run check-links
