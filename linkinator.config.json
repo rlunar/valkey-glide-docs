@@ -1,0 +1,14 @@
+{
+  "recurse": true,
+  "silent": true,
+  "directoryListing": true,
+  "skip": [
+    "https://github.com/valkey-io/valkey-glide.*",
+    "https://marketplace.visualstudio.com/.*",
+    ".*/languages/python/api.*",
+    ".*/languages/java/api.*",
+    ".*/languages/nodejs/api.*",
+    ".*/languages/go/api.*"
+  ],
+  "timeout": 5000
+}
