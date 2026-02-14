@@ -1,0 +1,44 @@
+---
+title: Cluster Awareness
+---
+
+Valkey GLIDE was designed to handle the complexities of Valkey (and Redis) clusters automatically. 
+It abstracts away slot management, node discovery, and failover logic so your application interacts with the cluster as if it were a single endpoint.
+
+For information on Valkey Cluster, see this [page](https://valkey.io/topics/cluster-tutorial/).
+
+## Topology Aware
+
+Requiring only one initial node within a cluster, GLIDE can use it to discover out the full topology and hash slot ownership.
+This allows GLIDE to calculates the destination of every command before sending it, ensuring they go directly to the correct 
+node rather than bouncing around the cluster.
+If the cluster topology changes, either due to scaling or failover, GLIDE will automatically update its internal mapping.
+
+### Hash Slot
+
+Valkey has a total of 16,384 fixed slots from which it splits across nodes in a cluster. Each key are then assigned to a slot for storage. 
+GLIDE's mapping of the cluster allows it to send them to the appropriate node.
+
+## Multi-Key Commands Handling
+
+Valkey (and Redis) clusters support commands that operate on multiple keys which maybe spread across different hash slot.
+GLIDE cluster awareness allows it to efficiently handles these commands, ensuring correct executions across the cluster.
+
+To learn more about multi-key commands, see this [section](/concepts/multi-slot-command-handling/).
+
+## Read Strategy - AZ Affinity Routing
+
+By default, GLIDE routes all read commands to the primary nodes. While this guarantees strong consistency it can lead to higher load especially if 
+there are many write operations on the primary node.
+To optimize read performance and distribute the load, GLIDE clients support different read strategies that allow reads to be directed to replica nodes.
+
+| Strategy                      | Description                                                                                                                                                                                                             |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Primary` (Default)           | Always read from primary, in order to get the freshest data.                                                                                                                                                            |
+| `PreferReplica`               | Spread requests between all replicas in a round robin manner. If no replica is available, route the requests to the primary.                                                                                            |
+| `AZAffinity`                  | Spread the read requests between replicas in the same client's availability zone in a round robin manner, falling back to other replicas or the primary if needed.                                                      |
+| `AzAffinityReplicaAndPrimary` | Spread the read requests among nodes within the client's Availability Zone (AZ) in a round robin manner, prioritizing local replicas, then the local primary, and falling back to any replica or the primary if needed. |
+
+To learn more about AZ Affinity routing, see our blog [post](https://valkey.io/blog/az-affinity-strategy/).
+
+See how to configure read strategy in our [guide](/how-to/connections/read-strategy/).

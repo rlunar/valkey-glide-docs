@@ -1,0 +1,136 @@
+---
+title: Scan a Cluster
+description: See how to use the Cluster Scan API from GLIDE.
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+GLIDE Cluster Scan API is built on top of the `SCAN` command, making it easier to setup and use in a cluster. 
+It also adds support for slot migration, failovers, and cluster rebalancing. 
+
+:::note
+For a detailed explanation of Cluster Scan, see our [article](/concepts/cluster-scan).
+:::
+
+## Scan
+<Tabs syncKey="progLangExample">
+  <TabItem label="Python">
+    ```py
+    cursor = ClusterScanCursor()
+    all_keys = []
+    while not cursor.is_finished():
+        cursor, keys = await client.scan(cursor)
+        all_keys.extend(keys)
+    ```
+  </TabItem>
+
+  <TabItem label="Java">
+
+    ```java
+    String key = "key:test_cluster_scan_simple" + UUID.randomUUID();
+    Map<String, String> expectedData = new LinkedHashMap<>();
+    for (int i = 0; i < 100; i++) {
+        expectedData.put(key + ":" + i, "value " + i);
+    }
+
+    Set<String> result = new LinkedHashSet<>();
+    ClusterScanCursor cursor = ClusterScanCursor.initalCursor();
+    while (!cursor.isFinished()) {
+         final Object[] response = clusterClient.scan(cursor).get();
+         cursor.releaseCursorHandle();
+
+         cursor = (ClusterScanCursor) response[0];
+         final Object[] data = (Object[]) response[1];
+         for (Object datum : data) {
+             result.add(datum.toString());
+          }
+    }
+    cursor.releaseCursorHandle();
+    ```
+  </TabItem>
+</Tabs>
+
+## Scan Using Patterns
+<Tabs syncKey="progLangExample">
+  <TabItem label="Python">
+      ```py
+    await client.mset({b'my_key1': b'value1', b'my_key2': b'value2', b'not_my_key': b'value3', b'something_else': b'value4'})
+    cursor = ClusterScanCursor()
+    await client.scan(cursor, match=b"*key*")
+    # Returns matching keys such as [b'my_key1', b'my_key2', b'not_my_key']
+    ```
+  </TabItem>
+
+    <TabItem label="Java">
+
+    ```java
+    Set<String> result = new LinkedHashSet<>();
+    ClusterScanCursor cursor = ClusterScanCursor.initalCursor();
+    while (!cursor.isFinished()) {
+        final Object[] response =
+                        clusterClient
+                                .scan(
+                                        cursor,
+                                        ScanOptions.builder()
+                                                .matchPattern("key:*")
+                                                .type(ScanOptions.ObjectType.STRING)
+                                                .build())
+                                .get();
+        cursor.releaseCursorHandle();
+
+         cursor = (ClusterScanCursor) response[0];
+         final Object[] data = (Object[]) response[1];
+         for (Object datum : data) {
+               result.add(datum.toString());
+          }
+    }
+    cursor.releaseCursorHandle();
+    ```
+  </TabItem>
+</Tabs>
+
+## Scan With The Count Option
+<Tabs syncKey="progLangInExamples">
+  <TabItem label="Python">
+      ```py
+    await client.mset({b'my_key1': b'value1', b'my_key2': b'value2', b'not_my_key': b'value3', b'something_else': b'value4'})
+    cursor = ClusterScanCursor()
+    await client.scan(cursor, count=1)
+    # Returns around `count` amount of keys: [b'my_key1']
+    ```
+  </TabItem>
+
+    <TabItem label="Java">
+        ```java
+    Set<String> result = new LinkedHashSet<>();
+    ClusterScanCursor cursor = ClusterScanCursor.initalCursor();
+    while (!cursor.isFinished()) {
+        final Object[] response = clusterClient.scan(cursor, ScanOptions.builder().count(100L).build()).get();
+        cursor.releaseCursorHandle();
+
+         cursor = (ClusterScanCursor) response[0];
+         final Object[] data = (Object[]) response[1];
+          for (Object datum : data) {
+               result.add(datum.toString());
+          }
+    }
+    cursor.releaseCursorHandle();
+    ```
+  </TabItem>
+</Tabs>
+
+## Scan For a Specific Data Type.
+<Tabs syncKey="progLangExample">
+  <TabItem label="Python">
+      ```py
+    await client.mset({b'key1': b'value1', b'key2': b'value2', b'key3': b'value3'})
+    await client.sadd(b"this_is_a_set", [b"value4"])
+    cursor = ClusterScanCursor()
+    all_keys = []
+    while not cursor.is_finished():
+        cursor, keys = await client.scan(cursor, type=ObjectType.STRING)
+        all_keys.extend(keys)
+    print(all_keys)  # Output: [b'key1', b'key2', b'key3']
+    ```
+  </TabItem>
+</Tabs>
