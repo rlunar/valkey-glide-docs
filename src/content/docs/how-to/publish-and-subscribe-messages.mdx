@@ -69,7 +69,6 @@ To publish a message, create a separate client to your Valkey instance. Both Sta
     $publishingClient = new ValkeyGlide();
     $publishingClient->connect(addresses: [['host' => 'localhost', 'port' => 6379]]);
     $publishingClient->publish('ch1', 'Test message');
-    $publishingClient->close();
     ```
   </TabItem>
 </Tabs>
@@ -307,12 +306,10 @@ Alternatively, GLIDE clients also provide options to use the client's native asy
   </TabItem>
 
   <TabItem label="Php">
-    ```php
-    // Note: PHP GLIDE does not support polling/async message retrieval
-    // Only callback-based PubSub is available (same as "with callback" example)
-    
-    // See the "Subscribe with callback" example above for PHP usage
-    ```
+    :::caution
+    GLIDE Php does not support polling/async message retrieval.
+    Only callback-based PubSub is available. See [example](#with-callback) above for usage.
+    :::
   </TabItem>
 </Tabs>
 
