@@ -1,65 +1,92 @@
 ---
-title: Pubsub Model
+title: Publish and Subscribe Messages
+description: See how to subscribe and publish messages with GLIDE
 ---
-
-import { Aside } from '@astrojs/starlight/components';
-
-
 
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-The design of the PubSub support in GLIDE aims to unify various nuances into a coherent interface, minimizing differences between Sharded, Cluster, and Standalone configurations.
-GLIDE is also responsible for tracking topology changes in real time, ensuring the client remains subscribed regardless of any connectivity issues. 
 
-Conceptually, the PubSub functionality can be divided into four actions: Subscribing, Publishing, Receiving, and Unsubscribing.
+Valkey GLIDE PubSub aims to unify various nuances into a coherent interface, minimizing differences between Sharded, Cluster, and Standalone configurations.
+Additionally, GLIDE is responsible for tracking topology changes in real time, ensuring the client remains subscribed regardless of any connectivity issues. 
 
-:::note[PHP PubSub Model]
-PHP GLIDE uses a different PubSub model based on the PHPRedis API. Instead of immutable subscription configuration during client creation, PHP uses traditional method calls like `subscribe()`, `psubscribe()`, `publish()`, and `unsubscribe()` with callback functions.
-:::
+This guide will go over how to configure GLIDE pubsub system.
 
-## Subscribing
+## Use Separate Clients
 
-Subscribing in GLIDE differs from the canonical RESP3 protocol. To restore subscription state after a topology change or server disconnect, the subscription configuration is immutable and provided during client creation. Thus, while it is possible to use subscription commands such as `SUBSCRIBE`/`PSUBSCRIBE`/`SSUBSCRIBE` via the custom commands interface, using them alongside this model might lead to unpredictable behavior. The subscription configuration is applied to the servers using the following logic:
+Due to the implementation of the resubscription logic, it is recommended to use a dedicated client for PubSub subscriptions. 
+That is, the client with subscriptions should not be the same client that issues commands. 
+In case of topology changes, the internal connections might be reestablished to resubscribe to the correct servers.
 
-* **Standalone mode:** The subscriptions are applied to a random node, either a primary or one of the replicas.
-* **Cluster mode:** For both Sharded and Non-sharded subscriptions, the Sharded semantics are used; the subscription is applied to the node holding the slot for the subscription's channel/pattern.
+## Publishing Client
 
-:::tip[Best Practice]
-Due to the implementation of the resubscription logic, it is recommended to use a dedicated client for PubSub subscriptions. That is, the client with subscriptions should not be the same client that issues commands. In case of topology changes, the internal connections might be reestablished to resubscribe to the correct servers.
-:::
+To publish a message, create a separate client to your Valkey instance. Both Standalone and Cluster are supported.
+
+<Tabs syncKey="progLangInExamples">
+  <TabItem label="Java">
+    ```java
+    // Publishing is done with a separate client
+    GlideClientConfiguration publishConfig = GlideClientConfiguration.builder()
+            .address(NodeAddress.builder().port(6379).build())
+            .build();
+    try (var publishingClient = GlideClient.createClient(publishConfig).get()) {
+        // publish message on ch1 channel
+        publishingClient.publish("Test message", "ch1").get();
+    }
+    ```
+  </TabItem>
+
+  <TabItem label="Node">
+    ```typescript
+    TODO: Add Example
+    ```
+  </TabItem>
+
+  <TabItem label="Python">
+    ```py
+    publishing_config = GlideClientConfiguration(
+        [NodeAddress("localhost", 6379)]
+    )
+
+    publishing_client = await GlideClient.create(publishing_config)
+
+    # publish message on ch1 channel
+    await publishing_client.publish("Test message", "ch1")
+    ```
+  </TabItem>
+
+  <TabItem label="Go">
+    ```go
+    publisher, _ := NewGlideClient(NewGlideClientConfiguration().
+        WithAddress(&NodeAddress{}))
+
+    publisher.Publish("ch1", "Hello from ch1")
+    ```
+  </TabItem>
+
+  <TabItem label="Php">
+    ```php
+    // Publisher process (separate):
+    $publishingClient = new ValkeyGlide();
+    $publishingClient->connect(addresses: [['host' => 'localhost', 'port' => 6379]]);
+    $publishingClient->publish('ch1', 'Test message');
+    $publishingClient->close();
+    ```
+  </TabItem>
+</Tabs>
 
 :::note
-Since GLIDE implements automatic re-connections and re-subscriptions on behalf of the user, there is a possibility of message loss during these activities. This is not a GLIDE-specific characteristic; similar effects will occur if the user handles such issues independently. Since the RESP protocol does not guarantee strong delivery semantics for PubSub functionality, GLIDE does not introduce additional constraints in this regard.
+Since GLIDE implements automatic re-connections and re-subscriptions on behalf of the user, there is a possibility of message loss during these activities. 
+This is not a GLIDE-specific characteristic; similar effects will occur if the user handles such issues independently. 
+Since the RESP protocol does not guarantee strong delivery semantics for PubSub functionality, GLIDE does not introduce additional constraints in this regard.
 :::
 
-## Publishing
+## Subscriber Clients
 
-Publishing functionality is unified into a single command method with an optional/default parameter for Sharded mode (applicable only for Cluster mode clients). The routing logic for this command is as follows:
+To subscribe to messages, use a separate client with subscriptions configured through the client's configuration object.
 
-* **Standalone mode:** The command is routed to a primary node or a replica if `read-only` mode is configured.
-* **Cluster mode:** The command is routed to the server holding the slot for the command's channel.
+### With Callback
 
-## Receiving
-
-There are three methods for receiving messages:
-
-* **Polling:** A non-blocking method, typically named `tryGetMessage`. It returns the next available message or nothing if no messages are available.
-* **Async:** An asynchronous method, returning a CompletableFuture, typically named `getMessage`.
-* **Callback:** A user-provided callback function that receives the incoming message along with the user-provided context. Note that the callback code must be thread-safe for applicable languages.
-
-The intended method is selected during client creation with the subscription configuration. When the configuration includes a callback (and an optional context), incoming messages will be passed to that callback as they arrive. Calls to the polling/async methods are prohibited and will fail. In the case of async/polling, incoming messages will be buffered in an unbounded buffer. The user should ensure timely extraction of incoming messages to avoid straining the memory subsystem.
-
-## Unsubscribing
-
-Since the subscription configuration is immutable and applied upon client creation, the model does not provide methods for unsubscribing during the client's lifetime. Additionally, issuing commands such as `UNSUBSCRIBE`/`PUNSUBSCRIBE`/`SUNSUBSCRIBE` via the custom commands interface may lead to unpredictable behavior. Subscriptions will be removed from servers upon client closure, typically as a result of the client's object destructor. Note that some languages, such as Python, might require an explicit call to a cleanup method, e.g.:
-
-```python
-client.close()
-```
-
-## Examples
-
-### Configuration with callback
+Glide clients can register a callback method to handle subscriptions in the client configuration. 
 
 <Tabs syncKey="progLangInExamples">
   <TabItem label="Java">
@@ -78,7 +105,7 @@ client.close()
                 .callback(callback)
                 .callback(callback, context)     // callback or callback with context are configured here
                 .build())
-            .build());
+            .build();
     try (var regularClient = GlideClient.createClient(config).get()) {
         // Do some work/wait - the callbacks will be dispatched on incoming messages
     } // unsubscribe happens here
@@ -108,17 +135,9 @@ client.close()
         )
     )
 
-    publishing_config = GlideClientConfiguration(
-        [NodeAddress("localhost", 6379)]
-    )
-
     listening_client = await GlideClient.create(listening_config)
-    publishing_client = await GlideClient.create(publishing_config)
 
-    # publish message on ch1 channel
-    await publishing_client.publish("Test message", "ch1")
-
-    # Do some work/wait - the callback will receive "Test message" message
+    # Do some work/wait - the callback will receive messages
 
     await listening_client.close()    # unsubscribe happens here
     ```
@@ -147,11 +166,6 @@ client.close()
     // create a client with a subscription
     NewGlideClient(configforsub)
 
-    publisher, _ := NewGlideClient(NewGlideClientConfiguration().
-        WithAddress(&NodeAddress{}))
-
-    publisher.Publish("ch1", "Hello from ch1")
-
     // Do more work here
 
     ```
@@ -179,18 +193,12 @@ client.close()
     // Code here only runs after unsubscribe
     $listeningClient->close();
     ```
-
-    ```php
-    // Publisher process (separate):
-    $publishingClient = new ValkeyGlide();
-    $publishingClient->connect(addresses: [['host' => 'localhost', 'port' => 6379]]);
-    $publishingClient->publish('ch1', 'Test message');
-    $publishingClient->close();
-    ```
   </TabItem>
 </Tabs>
 
-### Configuration without callback
+### Non-Callback
+
+Alternatively, GLIDE clients also provide options to use the client's native async features to handle polling for messages.
 
 <Tabs syncKey="progLangInExamples">
   <TabItem label="Java">
@@ -204,7 +212,7 @@ client.close()
                     .subscription(Map.of(PATTERN, "chat*", EXACT, Set.of("ch1", "ch2")))
                                                                 // or even all subscriptions at a time
                     .build())                                    // no callback is configured
-            .build())
+            .build()
     try (var regularClient = GlideClient.createClient(config).get()) {
         Message msg = regularClient.tryGetPubSubMessage(); // sync, does not block
         Message msg = regularClient.getPubSubMessage().get(); // async, waits for the next message
@@ -232,20 +240,12 @@ client.close()
         )
     )
 
-    publishing_config = GlideClientConfiguration(
-        [NodeAddress("localhost", 6379)]
-    )
-
     listening_client = await GlideClient.create(listening_config)
-    publishing_client = await GlideClient.create(publishing_config)
 
-    # publish message on ch1 channel
-    await publishing_client.publish("Test message", "ch1")
-
-    # waits for "Test message" to arrive
+    # waits for message to arrive
     message = await listening_client.get_pubsub_message()
 
-    # returns None since only one message was published
+    # returns None if no message is available
     message = listening_client.try_get_pubsub_message()
 
     await listening_client.close()    # unsubscribe happens here
@@ -311,7 +311,11 @@ client.close()
     // Note: PHP GLIDE does not support polling/async message retrieval
     // Only callback-based PubSub is available (same as "with callback" example)
     
-    // See the "Configuration with callback" example above for PHP usage
+    // See the "Subscribe with callback" example above for PHP usage
     ```
   </TabItem>
 </Tabs>
+
+## Next Steps
+
+To learn more about GLIDE's PubSub model, see our [explanation](/concepts/pubsub-model).
