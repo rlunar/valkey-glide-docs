@@ -141,7 +141,6 @@ export default defineConfig({
                 "how-to/security/authentication",
                 "how-to/security/dynamic-authentication",
                 "how-to/security/tls",
-                "how-to/security/access-control",
               {
                   label: "AWS Integrations",
                   items: [
