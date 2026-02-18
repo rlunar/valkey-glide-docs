@@ -378,10 +378,15 @@ export default defineConfig({
           collapsed: true,
           items: [
             "migration",
-            //  {
-            //   label: "Planning",
-            //   autogenerate: {directory: "migration/planning"}
-            //  }
+            {
+              label: "PHP",
+              items: [
+                {
+                  label: "From PHPRedis",
+                  slug: "migration/php/phpredis"
+                }
+              ]
+            }
           ],
         },
         {
