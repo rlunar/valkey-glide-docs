@@ -163,6 +163,14 @@ Windows support is currently available only for Valkey-GLIDE Java
     extension=valkey_glide
     ```
   </TabItem>
+
+  <TabItem label="C#">
+    **Requirements:** .NET 8.0+
+
+    ```bash
+    dotnet add package Valkey.Glide
+    ```
+  </TabItem>
 </ParamTabs>
 
 :::tip[Installation Guides]
@@ -326,6 +334,33 @@ For testing against a live instance, update the `GlideClient` configurations.
     }
     ```
   </TabItem>
+
+  <TabItem label="C#">
+    ```csharp
+    using Valkey.Glide;
+    using static Valkey.Glide.ConnectionConfiguration;
+
+    // Create client configuration
+    var config = new StandaloneClientConfigurationBuilder()
+        .WithAddress("localhost", 6379)
+        .Build();
+
+    await using var client = await GlideClient.CreateClient(config);
+
+    try
+    {
+        // Test the connection
+        var result = await client.PingAsync();
+
+        // Valkey responds with PONG
+        Console.WriteLine($"Connected! Server responded: {result}");
+    }
+    catch (Exception e)
+    {
+        Console.WriteLine($"Connection failed: {e.Message}");
+    }
+    ```
+  </TabItem>
 </Tabs>
 
 Running the above snippet should give you this response.
@@ -335,7 +370,7 @@ Connected! Server responded: PONG
 ```
 
 :::caution
-Always `close()` GLIDE clients to cleanup resources when the instance is no longer needed.
+Always close/dispose GLIDE clients to cleanup resources when the instance is no longer needed.
 :::
 
 ## Connection Configuration
@@ -440,6 +475,22 @@ These options, and other interfaces, stay consistent between languages.
             'socket_timeout' => 3000
         ]
     );
+    ```
+  </TabItem>
+
+  <TabItem label="C#">
+    ```csharp
+    using Valkey.Glide;
+    using static Valkey.Glide.ConnectionConfiguration;
+
+    // Setting up connection configuration
+    var config = new StandaloneClientConfigurationBuilder()
+        .WithAddress("localhost", 6379)
+        .WithRequestTimeout(TimeSpan.FromMilliseconds(5000))
+        .WithDatabaseId(0)
+        .Build();
+
+    await using var client = await GlideClient.CreateClient(config);
     ```
   </TabItem>
 </Tabs>

@@ -148,6 +148,7 @@ export default defineConfig({
                 "how-to/security/authentication",
                 "how-to/security/dynamic-authentication",
                 "how-to/security/tls",
+                // "how-to/security/best-practices", // TODO: page not yet created
                 {
                   label: "AWS Integrations",
                   items: [
@@ -338,6 +339,11 @@ export default defineConfig({
                 {
                   label: "Go",
                   link: "https://pkg.go.dev/github.com/valkey-io/valkey-glide/go/v2",
+                  attrs: { style: "font-style: italic", target: "_blank" },
+                },
+                {
+                  label: "C#",
+                  link: "https://github.com/valkey-io/valkey-glide-csharp",
                   attrs: { style: "font-style: italic", target: "_blank" },
                 },
                 {
