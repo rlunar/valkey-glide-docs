@@ -1,23 +1,12 @@
 # lychee.toml
 
 max_retries = 3             
-retry_wait_time = 10       
-
-# Exclude specific files from being scanned
-exclude_path = [
-    "dist/404.html",
-    "dist/languages/java/api",
-    "dist/languages/nodejs/api",
-    "dist/languages/python/api",
-]
+timeout = 30
 
 # Exclude specific URLs/links (RegEx)
 exclude = [
     # GitHub edit links
     'https://github\.com/valkey-io/valkey-glide-docs/edit/.*',
-
-    # The repo is private so it will cause error.
-    'https://github.com/valkey-io/valkey-glide-docs',
 
     # When adding a new page, it would not be live when Lychee checks the links. 
     # It will return error, blocking both PR and deployment workflows.
@@ -25,11 +14,8 @@ exclude = [
     # are still checked by Lychee.
     'https://glide.valkey.io/.*',
 
-    # API Documentation exclusions
-    '.*/languages/java/api',
-    '.*/languages/nodejs/api',
-    '.*/languages/python/api',
-
-    # Specific file link exclusion
-    './dist/404.html'
+    # API docs are deployed separately and don't exist in the build output
+    '.*/languages/java/api.*',
+    '.*/languages/nodejs/api.*',
+    '.*/languages/python/api.*',
 ]
